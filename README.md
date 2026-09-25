@@ -8,7 +8,7 @@ A research project asking whether a reasoning system's capability can grow with 
 - **0b:** a library learned from scratch recovers real procedures but stalls without a guide.
 - **0c:** a refactoring learner with a state-conditioned guide solves 62% of unseen compositional tasks. That passes P1′, and the knowledge is family-specific (the control passes). But it fails the efficiency criteria: the guide costs more per decision than it saves, and learning takes about a thousand tasks to repay.
 - **0d:** a memory of verified programs makes recognized recurring tasks about 1,000× cheaper and more accurate than fresh search. It raises accuracy by 14 points and halves the work per correct answer across a recurring stream, at no cost when nothing recurs. But about 30% of recurrences go unrecognized (P1d failed; P2d–P4d passed).
-- **1a (set up):** the same question on a realistic workload. Data-wrangling requests by example ("Mary Chen" → "M.C.") are answered by Qwen2.5-Coder-1.5B on the CPU, with and without a memory of verified functions, and against a classical synthesizer. Everything runs and is tested. The model run is waiting for the weights: this environment blocks `huggingface.co`, so it runs either here once that host is allowed or on the author's machine (see `docs/11-stage-1a-setup.md`).
+- **1a (set up):** the same question on a realistic workload. Data-wrangling requests by example ("Mary Chen" → "M.C.") are answered by Qwen2.5-Coder-1.5B on the CPU, with and without a memory of verified functions, and against a classical synthesizer. Everything runs and is tested. The model run is waiting for the weights. This environment blocks `huggingface.co`, so the author is bringing the model in through the repository, split into checksummed parts on a separate branch (see `docs/11-stage-1a-setup.md`).
 
 ## Documents
 
@@ -37,6 +37,7 @@ src/sage/      worlds.py (relational worlds), machine.py (instruction set + cost
                synth.py (classical search), llm.py (prompts, llama.cpp and Ollama backends), systems.py
 experiments/   stage0a.py, stage0b.py, stage0c.py, stage0d.py, stage1a.py
 reports/       generated results (Markdown summaries, raw JSON, split manifests)
+tools/         model_parts.py (splits the model into checksummed parts for GitHub, and joins them)
 tests/         unittest suites
 pilot/         the toy utility-curve pilot that motivated the design
 ```
@@ -46,7 +47,7 @@ pilot/         the toy utility-curve pilot that motivated the design
 Python 3.10 or newer. numpy is needed for the stage 0c guide (`pip install numpy`), and llama-cpp-python for the stage 1a model (`pip install -e ".[llm]"`).
 
 ```sh
-PYTHONPATH=src python -m unittest discover -s tests       # 58 tests, a few seconds
+PYTHONPATH=src python -m unittest discover -s tests       # 60 tests, a few seconds
 PYTHONPATH=src python experiments/stage0a.py              # about 2 minutes; writes reports/stage0a.*
 PYTHONPATH=src python experiments/stage0a.py --well-posed # the same with ambiguous tasks rejected
 PYTHONPATH=src python experiments/stage0b.py learn --stream planted --seed 0   # about 6 CPU minutes

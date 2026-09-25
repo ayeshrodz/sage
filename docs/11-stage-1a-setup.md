@@ -26,7 +26,7 @@ Nothing has been run on the registered streams, and their manifests have not bee
 | Memory | `src/sage/wrangle/memory.py` | Verified functions with trust counts. Lookup checks every stored function against the request's examples, in order of trust, then recent use. |
 | Classical search | `src/sage/wrangle/synth.py` | E: an autofill-style synthesizer over fields, slices, case changes and constants. It returns the simplest consistent program, preferring more general parts. |
 | Harness | `experiments/stage1a.py` | Phases `generate`, `solve`, `report` and `final`. See the top of the file. |
-| Tests | `tests/test_wrangle.py` | 19 tests (58 in the whole suite). |
+| Tests | `tests/test_wrangle.py`, `tests/test_model_parts.py` | 19 tests, plus 2 for `tools/model_parts.py` (60 in the whole suite). |
 
 ## Checked here without the model
 
@@ -79,8 +79,45 @@ Every stage 1a run must be on **one machine**, because CPU time is the cost meas
 
 ### Where
 
-- **Here, in this cloud environment.** Allow `huggingface.co` in the environment's Network access settings. Its downloads may also redirect to hosts under `hf.co`, which then need allowing too. Then ask Claude to continue.
+- **Here, with the model brought in through the repository (the author's choice, 2026-09-25).** The author downloads the file and pushes it, split into parts, to a separate `model-weights` branch, so the network policy stays as it is. See [Bringing the model in through the repository](#bringing-the-model-in-through-the-repository).
+- **Here, with `huggingface.co` allowed** in the environment's Network access settings. Its downloads may also redirect to hosts under `hf.co`, which then need allowing too.
 - **On your own computer.** You need Python 3.10 or newer, about 2 GB of free disk, and either a C/C++ compiler or a prebuilt llama-cpp-python wheel.
+
+### Bringing the model in through the repository
+
+GitHub refuses files over 100 MB, so `tools/model_parts.py` splits the model into 45 MiB parts, with a SHA-256 checksum for every part and for the whole file. The parts go on their own branch, so the research branches never carry them. On the other side, `join` rebuilds the file only if every checksum matches.
+
+1. **Download** `qwen2.5-coder-1.5b-instruct-q4_k_m.gguf` in a browser.
+   - It comes from the official Qwen repository: <https://huggingface.co/Qwen/Qwen2.5-Coder-1.5B-Instruct-GGUF/tree/main>.
+   - The file's page there shows its SHA256.
+   - The model is Apache-2.0 licensed, so keeping a copy in a private repository is fine.
+2. **Split** it, from a clone of this repository on the research branch:
+
+   ```sh
+   python tools/model_parts.py split PATH/TO/qwen2.5-coder-1.5b-instruct-q4_k_m.gguf ../sage-model
+   ```
+
+   Check that the printed SHA-256 matches the one on the Hugging Face page.
+3. **Push** the parts as a new branch with its own history, from a fresh folder so nothing else gets added:
+
+   ```sh
+   cd ../sage-model
+   git init
+   git checkout -b model-weights
+   git add .
+   git commit -m "Qwen2.5-Coder-1.5B-Instruct Q4_K_M GGUF, in parts"
+   git remote add origin https://github.com/ayeshrodz/sage.git
+   git push -u origin model-weights
+   ```
+
+4. **Tell Claude the SHA-256** from step 2, in the conversation. That is a second channel, independent of the upload. Claude then:
+   1. fetches the branch;
+   2. rebuilds the file into `models/` (git-ignored) with `python tools/model_parts.py join`;
+   3. checks the result against that checksum.
+
+- **Costs:** the branch adds about 1.1 GB to the repository, and new cloud sessions may take longer to start while it exists.
+- **After stage 1a:** keep the branch as the pinned copy of the model, or delete it with `git push origin --delete model-weights`.
+- **Through the website instead:** split with `--part-mb 24`, create the `model-weights` branch on GitHub, and use Add file → Upload files, in a few batches. The web uploader takes files up to 25 MB.
 
 ### Steps
 
