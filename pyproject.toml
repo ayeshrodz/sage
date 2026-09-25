@@ -3,7 +3,7 @@ name = "sage"
 version = "0.0.1"
 description = "SAGE experiment 0: library economics on typed relational worlds"
 requires-python = ">=3.10"
-dependencies = []
+dependencies = ["numpy>=1.24"]  # the stage 0c guide
 
 [build-system]
 requires = ["setuptools>=61"]

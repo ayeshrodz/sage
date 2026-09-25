@@ -98,3 +98,54 @@ Every system gets a budget of 20,000 candidate programs per task.
 - Clearly labelled exploratory analyses.
 
 The hidden splits are generated and evaluated once.
+
+## Amendment 1 (2026-09-25, before `0c-test` and `0c-mismatch-test` were generated)
+
+All development used `0c-train` and `0c-val` only, with seed 0.
+
+### What development showed
+
+| Development step | Val solved | Learning work | Guide ranking on val* |
+|---|---:|---:|---:|
+| Task-level guide, as registered (features of the task seen from *x*, once) | 6–12 / 40 | 0.18–0.88B | 31–35% |
+| + calibration: frequency prior, larger floor | 9 / 40 | 0.30B | 35% |
+| + Minton's rule (accept a batch unless validation gets worse) | 12 / 40 | 0.31B | 33% |
+| **State-conditioned guide** (a policy that looks at the current search state) | **28 / 40** | 1.62B | 18% |
+| + deferred evaluation, cheaper learning (secondary configuration) | 18 / 40 at 2k | 0.32B | 17% |
+| Richer learning with current code (primary configuration) | 24 / 40 at 5k | 1.02B | 24% |
+
+\*Teacher-forced mean percentile rank of the reference program's tokens (the P-guide measure defined below). Evaluator-side only.
+
+Two lessons came out of this. First, a task-level guide cannot see a composition of 2–3 skills from its features, while a guide that re-reads the state after every step can. Second, the per-state guide costs perception and scoring at every state it evaluates, and that cost eats most of what it saves. That is the pilot's routing-cost lesson, reappearing inside search.
+
+### Changes, fixed from here on
+
+1. **The guide is state-conditioned.**
+   - It sees path features from the *current* set to the demonstrated answers. The start state looks 3 steps ahead; later states look 2 steps (primary) or 1 step (secondary).
+   - It also gets one-step completion checks (filter, `drop_x`, set operation with the saved set), the stack depth and the last token.
+   - It is trained by replaying solved programs and dreams step by step, with the model mixed with the overall token frequency (weight 0.3) and a uniform floor (0.05).
+2. **Search** evaluates the policy lazily, deferring evaluation until a state is popped (as in Fast Downward), with a cap on policy calls per search. Later states reuse their parent's order.
+3. **Acceptance** keeps a batch unless guided validation solves fewer tasks (Minton's rule). If a batch is rejected, its top half is tried. When nothing is accepted, a retrained guide is adopted if validation holds.
+4. **Dreams** include the instruction set's own idioms (`push <path> <set op>`, `<path> drop_x`), and draw learned entries in proportion to their use.
+5. **S3 stops at its own cap** within the registered 20,000-candidate ceiling: 5,000 candidates (primary) or 2,000 (secondary). On val, raising the cap from 5,000 to 20,000 solved no additional tasks.
+6. **P-guide for a state-conditioned guide.** The reference program is replayed on each task's demonstrations. At each step, we take the percentile rank of the reference's next token given the state its prefix reaches (teacher forcing). Those ranks are averaged over steps, tasks and seeds, and the 10% threshold is unchanged. The rank of the first token at the start state is reported alongside.
+7. **Two configurations are run on the hidden test.** Both are frozen in `experiments/stage0c.py`:
+   - `primary`: wake budget 10,000; validation budget 5,000; cap 5,000; 300 policy calls; 2-step state perception.
+   - `secondary`: wake budget 2,000; validation budget 2,000; cap 2,000; 200 policy calls; 1-step state perception; features must be seen ≥4 times.
+
+   **Selection rule:** the configuration that passes the most criteria when estimated on val is the primary one, and the criteria are judged on it; the other is reported alongside. Estimated on val, the richer configuration passes P1′ (60%) and the lean one passes none, so the richer one is primary.
+
+### Projections on val, recorded before the test
+
+Against S0 on val (3 correct answers out of 40, 3.18M work per correct answer):
+
+| Configuration | Operational ratio | Amortized ratio (N = 1,000) | Break-even | Guide ranking |
+|---|---:|---:|---:|---:|
+| primary | 1.5× | 0.8× | ~1,900 tasks | 24% |
+| secondary | 3.9× | 2.0× | ~310 tasks | 17% |
+
+**Both are expected to fail P3′ and P-guide.** P1′ is expected to pass only for the primary configuration. These projections are made on 40 validation tasks with one seed and are recorded here so the test can confirm or contradict them.
+
+### Unchanged
+
+The splits, the single generation and evaluation of the hidden splits, all thresholds, N = 1,000, the control design, and the 20,000-candidate ceiling for S0 and S0+planted.

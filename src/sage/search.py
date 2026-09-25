@@ -121,3 +121,73 @@ def short_program_exists(task: Task, tokens: list[Token], max_len: int) -> bool:
                 nxt.append((child, child_depth))
         frontier = nxt
     return False
+
+
+def search_policy(tokens: list[Token], policy, tiebreak: list[int], task: Task, budget: int,
+                  max_calls: int = 300) -> SearchResult:
+    """Best-first search whose token order is chosen per state by `policy`, evaluated lazily.
+
+    `policy(state, last_token_name) -> (costs, work)` returns -log p for every
+    token given the state the search is in, and the work it spent (perception
+    plus scoring). A state's successors are ordered by its own costs, so the
+    prior of a program is the product of the policy's step probabilities.
+
+    Evaluation is deferred (as in Fast Downward): a new state is queued with
+    its parent's best step cost as an estimate and is only perceived and
+    scored if it is popped for expansion. After `max_calls` policy calls,
+    states reuse their parent's order instead. The work of policy calls is
+    included in `ops`.
+    """
+    T = len(tokens)
+    demos = task.demos
+    goal = tuple(d.answer for d in demos)
+    start = tuple((frozenset((d.x,)), ()) for d in demos)
+    counter = Counter()
+    if tuple(s[0] for s in start) == goal:
+        return SearchResult(True, (), 0, 0, 0)
+    calls = 0
+    extra = 0
+
+    def ordering(state, depth, last, inherited):
+        nonlocal calls, extra
+        if calls < max_calls or inherited is None:
+            costs, work = policy(state, last)
+            calls += 1
+            extra += work
+        else:
+            costs = inherited
+        order = [i for i in sorted(range(T), key=lambda i: (costs[i], tiebreak[i])) if tokens[i].applicable(depth)]
+        return costs, order
+
+    tie = itertools.count()
+    # Entries: (priority, tie, g, state, depth, program, rank, costs, order, last).
+    # rank == -1 marks a state that has not been evaluated yet (costs are the parent's).
+    heap = [(0.0, next(tie), 0.0, start, 0, (), -1, None, None, None)]
+    visited = {start}
+    candidates = 0
+    while heap and candidates < budget:
+        _, _, g, state, depth, program, rank, costs, order, last = heapq.heappop(heap)
+        if rank == -1:
+            costs, order = ordering(state, depth, last, costs)
+            if order:
+                heapq.heappush(heap, (g + costs[order[0]], next(tie), g, state, depth, program, 0, costs, order, last))
+            continue
+        tok_i = order[rank]
+        if rank + 1 < len(order):
+            sib = order[rank + 1]
+            heapq.heappush(heap, (g + costs[sib], next(tie), g, state, depth, program, rank + 1, costs, order, last))
+        body = tokens[tok_i].body
+        child = tuple(execute(d.world, d.x, cur, stack, body, counter) for d, (cur, stack) in zip(demos, state))
+        candidates += 1
+        if child in visited:
+            continue
+        child_depth = depth + tokens[tok_i].delta
+        child_program = program + (tok_i,)
+        if child_depth == 0 and all(c[0] == a for c, a in zip(child, goal)):
+            return SearchResult(True, child_program, candidates, counter.ops + extra, counter.instrs)
+        visited.add(child)
+        child_g = g + costs[tok_i]
+        estimate = costs[order[0]]
+        heapq.heappush(heap, (child_g + estimate, next(tie), child_g, child, child_depth, child_program, -1, costs,
+                              None, tokens[tok_i].name))
+    return SearchResult(False, (), candidates, counter.ops + extra, counter.instrs)
