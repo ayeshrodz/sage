@@ -2,14 +2,13 @@
 
 A research project asking whether a reasoning system's capability can grow with what it has *stored* (verified programs and memories) while the compute it spends per task stays small. The long-run aim is compact, CPU-runnable AI with a small active core and a large, mostly inactive store of skills.
 
-**Status:** experiment 0, stages 0a–0d complete.
+**Status:** experiment 0 (stages 0a–0d) is complete. Stage 1a, a real workload with a small language model, is built, tested and pre-registered; its model run is pending.
 
 - **0a:** a given library cuts work at least 90×.
 - **0b:** a library learned from scratch recovers real procedures but stalls without a guide.
 - **0c:** a refactoring learner with a state-conditioned guide solves 62% of unseen compositional tasks. That passes P1′, and the knowledge is family-specific (the control passes). But it fails the efficiency criteria: the guide costs more per decision than it saves, and learning takes about a thousand tasks to repay.
 - **0d:** a memory of verified programs makes recognized recurring tasks about 1,000× cheaper and more accurate than fresh search. It raises accuracy by 14 points and halves the work per correct answer across a recurring stream, at no cost when nothing recurs. But about 30% of recurrences go unrecognized (P1d failed; P2d–P4d passed).
-
-The proposed next step is recognition at scale.
+- **1a (set up):** the same question on a realistic workload. Data-wrangling requests by example ("Mary Chen" → "M.C.") are answered by Qwen2.5-Coder-1.5B on the CPU, with and without a memory of verified functions, and against a classical synthesizer. Everything runs and is tested. The model run is waiting for the weights: this environment blocks `huggingface.co`, so it runs either here once that host is allowed or on the author's machine (see `docs/11-stage-1a-setup.md`).
 
 ## Documents
 
@@ -23,6 +22,8 @@ The proposed next step is recognition at scale.
 8. [`docs/07-stage-0c-results.md`](docs/07-stage-0c-results.md): stage 0c results (P1′ and the control pass; P3′ and P-guide fail) and the options for the next step.
 9. [`docs/08-stage-0d-preregistration.md`](docs/08-stage-0d-preregistration.md): stage 0d criteria and amendment, registered before the streams existed.
 10. [`docs/09-stage-0d-results.md`](docs/09-stage-0d-results.md): stage 0d results (P2d–P4d pass, P1d fails), why recurrences are missed, and the options for the next step.
+11. [`docs/10-stage-1a-preregistration.md`](docs/10-stage-1a-preregistration.md): stage 1a criteria (W1–W4), registered before any stage 1a code or stream existed.
+12. [`docs/11-stage-1a-setup.md`](docs/11-stage-1a-setup.md): what stage 1a consists of, what was checked without the model, and how to run the model stage.
 
 ## Layout
 
@@ -32,7 +33,9 @@ src/sage/      worlds.py (relational worlds), machine.py (instruction set + cost
                search.py (guided and policy-guided search), learn.py and learn_guided.py (wake-sleep learners),
                features.py, guide.py, dreams.py (perception, learned guide, dreams), control.py, evaluation.py,
                stream.py and reuse.py (recurring-task streams, reuse memory)
-experiments/   stage0a.py, stage0b.py, stage0c.py, stage0d.py
+               wrangle/ for stage 1a: transforms.py and requests.py (workload), sandbox.py, memory.py,
+               synth.py (classical search), llm.py (prompts, llama.cpp and Ollama backends), systems.py
+experiments/   stage0a.py, stage0b.py, stage0c.py, stage0d.py, stage1a.py
 reports/       generated results (Markdown summaries, raw JSON, split manifests)
 tests/         unittest suites
 pilot/         the toy utility-curve pilot that motivated the design
@@ -40,15 +43,19 @@ pilot/         the toy utility-curve pilot that motivated the design
 
 ## Running
 
-Python 3.10 or newer. numpy is needed only for the stage 0c guide (`pip install numpy`).
+Python 3.10 or newer. numpy is needed for the stage 0c guide (`pip install numpy`), and llama-cpp-python for the stage 1a model (`pip install -e ".[llm]"`).
 
 ```sh
-PYTHONPATH=src python -m unittest discover -s tests       # 39 tests, a few seconds
+PYTHONPATH=src python -m unittest discover -s tests       # 58 tests, a few seconds
 PYTHONPATH=src python experiments/stage0a.py              # about 2 minutes; writes reports/stage0a.*
 PYTHONPATH=src python experiments/stage0a.py --well-posed # the same with ambiguous tasks rejected
 PYTHONPATH=src python experiments/stage0b.py learn --stream planted --seed 0   # about 6 CPU minutes
 PYTHONPATH=src python experiments/stage0c.py learn --config primary --seed 0   # about 4 CPU minutes
 python pilot/utility_curve.py                             # toy pilot; writes pilot/RESULTS.md
+PYTHONPATH=src python experiments/stage1a.py solve --system E --stream dev   # stage 1a classical search, seconds
+PYTHONPATH=src python experiments/stage1a.py report --stream dev
 ```
+
+The stage 1a model runs, including the model download, are described in `docs/11-stage-1a-setup.md`.
 
 Costs are reported as deterministic element operations (entities and edges touched), with CPU time alongside. Energy measurement is deferred until the project runs on local hardware with readable energy counters.
