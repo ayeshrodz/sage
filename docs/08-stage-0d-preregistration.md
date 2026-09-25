@@ -65,3 +65,17 @@ Each value is computed per seed, then averaged over the 3 seeds.
 - Explicitly labelled exploratory analyses.
 
 The streams are generated and evaluated once.
+
+## Amendment 1 (2026-09-25, before `0d-zipf` and `0d-norecur` were generated)
+
+**No change to anything registered.** R0 and R3, the criteria and the thresholds stand exactly as written.
+
+**Development record.** The pipeline was dry-run on an unregistered dev stream: 12 types and 60 instances, plus 20 non-recurring ones, with S3 seed 0.
+- Hits cost a median of 269 operations and 92% of them were correct.
+- But recurring types whose *first* stored program was an over-specific fit to that one instance (fitting, say, 3 of the next instance's 4 demonstrations) missed again and again, each time paying for a full search. That held the dev P1d ratio at 1.7×.
+
+**A consolidating memory (R3+) was tried on the dev stream and dropped.** When a stored program nearly fitted a new instance, R3+ searched for one program fitting both instances' demonstrations. On the dev stream no consolidation succeeded, and the merged searches added 19–21% work, even on the non-recurring stream.
+- Different types can agree on the first demonstrations by chance, so a near miss is not a reliable same-type signal.
+- When it was the same type, the true procedure was out of the search's reach even with more evidence, which is why search had settled for an over-specific program to begin with.
+
+R3+ is not part of the registered run. The finding is reported with the results.

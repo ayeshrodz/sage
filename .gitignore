@@ -3,3 +3,4 @@ __pycache__/
 .venv/
 .DS_Store
 reports/*_quick*
+reports/stage0d/cache/
