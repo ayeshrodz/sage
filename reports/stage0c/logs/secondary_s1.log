@@ -1,0 +1,8 @@
+learning: config=secondary seed=1 GuidedConfig(rounds=8, wake_budget=2000, val_budget=2000, solve_cap=2000, max_tries=3, batch=6, min_support=2, max_frag_tokens=4, max_body=12, dreams_initial=200, dreams_per_update=60, dream_pool=400, guide_epochs=3, guide_warm_epochs=1, guide_lr=0.3, guide_l2=0.0001, min_feature_count=4, floor=0.05, prior_weight=0.3, accept_ties=True, root_depth=3, state_depth=1, max_policy_calls=200, retry_half=True, refresh=True, seed=1)
+  round 0: val solved 4/40 (guide over base instructions)
+  round 1: train solved 75/200 (+75), library 6, val solved 6/40 (cands 70,242), accepted ['push clos.parent in.parent minus_pop', 'out.parent rclos.parent drop_x', 'out.parent in.parent drop_x', 'out.lives_in in.lives_in drop_x', 'out.friend out.friend drop_x', 'clos.parent in.parent in.parent']
+  round 2: train solved 100/200 (+25), library 12, val solved 8/40 (cands 66,009), accepted ['out.parent L0', 'L0 in.parent', 'clos.parent rclos.parent', 'out.friend out.friend rclos.parent rclos.parent', 'L1 rclos.parent', 'out.parent in.parent']
+  round 3: train solved 109/200 (+9), library 14, val solved 8/40 (cands 66,970), accepted ['L6 in.parent', 'L2 out.owns in.owns']
+  round 4: train solved 109/200 (+0), library 18, val solved 8/40 (cands 65,820), accepted ['push L18 union_pop out.owns', 'L4 out.parent out.parent', 'out.parent L1', 'push L8 inter_pop']
+  round 5: train solved 109/200 (+0), library 18, val solved 8/40 (cands 65,820), accepted []
+  pruned 2; final library 16, val solved 9/40; learning work 349,511,077

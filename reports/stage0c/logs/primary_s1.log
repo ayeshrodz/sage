@@ -1,0 +1,7 @@
+learning: config=primary seed=1 GuidedConfig(rounds=8, wake_budget=10000, val_budget=5000, solve_cap=5000, max_tries=3, batch=6, min_support=2, max_frag_tokens=4, max_body=12, dreams_initial=200, dreams_per_update=60, dream_pool=400, guide_epochs=3, guide_warm_epochs=1, guide_lr=0.3, guide_l2=0.0001, min_feature_count=2, floor=0.05, prior_weight=0.3, accept_ties=True, root_depth=3, state_depth=2, max_policy_calls=300, retry_half=True, refresh=True, seed=1)
+  round 0: val solved 8/40 (guide over base instructions)
+  round 1: train solved 99/200 (+99), library 3, val solved 8/40 (cands 162,747), accepted ['push clos.parent in.parent minus_pop', 'out.parent in.parent', 'out.parent rclos.parent drop_x']
+  round 2: train solved 114/200 (+15), library 9, val solved 11/40 (cands 150,155), accepted ['out.parent L6', 'out.friend out.friend drop_x', 'out.lives_in in.lives_in drop_x', 'clos.parent rclos.parent', 'L7 drop_x', 'push out.lives_in in.lives_in minus_pop']
+  round 3: train solved 125/200 (+11), library 12, val solved 17/40 (cands 130,519), accepted ['push L7 minus_pop', 'push L12 minus_pop rclos.parent', 'clos.parent in.parent']
+  round 4: train solved 125/200 (+0), library 12, val solved 17/40 (cands 130,519), accepted []
+  pruned 0; final library 12, val solved 17/40; learning work 1,395,583,645

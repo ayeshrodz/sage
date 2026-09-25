@@ -1,0 +1,7 @@
+learning: config=secondary seed=0 GuidedConfig(rounds=8, wake_budget=2000, val_budget=2000, solve_cap=2000, max_tries=3, batch=6, min_support=2, max_frag_tokens=4, max_body=12, dreams_initial=200, dreams_per_update=60, dream_pool=400, guide_epochs=3, guide_warm_epochs=1, guide_lr=0.3, guide_l2=0.0001, min_feature_count=4, floor=0.05, prior_weight=0.3, accept_ties=True, root_depth=3, state_depth=1, max_policy_calls=200, retry_half=True, refresh=True, seed=0)
+  round 0: val solved 4/40 (guide over base instructions)
+  round 1: train solved 60/200 (+60), library 6, val solved 8/40 (cands 69,831), accepted ['out.parent in.parent drop_x', 'push out.lives_in in.lives_in minus_pop', 'out.friend out.friend drop_x', 'out.lives_in in.lives_in drop_x', 'out.parent rclos.parent drop_x rclos.parent', 'push out.friend out.friend minus_pop']
+  round 2: train solved 97/200 (+37), library 12, val solved 14/40 (cands 58,028), accepted ['push out.parent in.parent minus_pop', 'out.parent L0 in.parent', 'L0 in.parent drop_x', 'out.parent in.parent out.owns', 'in.parent in.parent', 'push out.parent in.parent inter_pop']
+  round 3: train solved 118/200 (+21), library 18, val solved 18/40 (cands 52,636), accepted ['out.parent L6', 'L6 rclos.parent', 'clos.parent clos.parent', 'push out.parent rclos.parent minus_pop', 'L7 drop_x', 'clos.parent rclos.parent']
+  round 4: train solved 118/200 (+0), library 18, val solved 18/40 (cands 52,636), accepted []
+  pruned 0; final library 18, val solved 18/40; learning work 315,126,206
