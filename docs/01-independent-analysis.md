@@ -2,7 +2,8 @@
 
 **Date:** 2026-09-25  
 **Reviewer:** Claude (Anthropic), reviewing [`00-handoff-openai.md`](00-handoff-openai.md)  
-**Status:** a proposal for discussion. Nothing here is decided until we agree on it.
+**Status:** a proposal for discussion. Nothing here is decided until we agree on it.  
+**Update 2026-09-25:** the reframe and the relational domain were accepted (see [`02-objective-and-decisions.md`](02-objective-and-decisions.md)); stage 0a has run and passed its gate (see [`03-stage-0a-results.md`](03-stage-0a-results.md)).
 
 **How to read this.** §0 is the short version. §1 restates SAGE so you can check that I understood it. §2 and §3 say what I would keep and what I would change, and why. §4 is a small pilot I ran to test the most important concern. §5 is the revised experiment, §6 maps each original idea onto it, and §7 lists the decisions I need from you. §8 audits the references and adds the missing ones.
 
