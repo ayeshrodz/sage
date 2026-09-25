@@ -69,3 +69,11 @@ A failed criterion is reported as failed. The hidden split is not re-run after s
 - The P2 reference set is still the planted entries at the top level of ≥5% of `train` targets, now counted on the curriculum stream.
 
 **Why this is fair.** The control stream gets the same curriculum, so any benefit from easier training tasks alone shows up in the control comparison. The curriculum is also part of what is being tested: the objective's progression (unfamiliar task → effortful solution → transferable procedure) assumes the system meets problems it can actually solve before harder ones.
+
+## Frozen learner configuration (2026-09-25, before the hidden `test` split was generated)
+
+Tuning used `train`/`val` only: two development runs per stream at seed 0. The first was the amendment-1 configuration; the second added `trim_filters`, which moves planted `val` from 13 to 14 of 40.
+
+Frozen `LearnConfig`: `rounds=8`, `wake_budget=20000`, `val_budget=10000`, `batch=4`, `min_support=2`, `min_len=2`, `max_len=8`, `trim_filters=True`. Learning seeds: 0, 1 and 2. The final learning runs and the single `test` evaluation use the commit that adds this section.
+
+The development runs already showed on `val` that the control stream benefits from learning at least as much as the planted stream (4 → 16 of 40, against 6 → 14 of 40). Typed random paths reuse a small vocabulary of step pairs. The control is kept exactly as registered, and its result is reported whatever it is.

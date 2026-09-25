@@ -39,6 +39,7 @@ class LearnConfig:
     min_support: int = 2
     min_len: int = 2
     max_len: int = 8
+    trim_filters: bool = True  # filters act as arguments: no fragment may start or end with one
     seed: int = 0
 
 
@@ -147,6 +148,8 @@ def learn(train, val, cfg: LearnConfig, log=print) -> dict:
             if len(batch) == cfg.batch:
                 break
             if score <= 0 or any(_contains(f, frag) or _contains(frag, f) for f in seen_frags):
+                continue
+            if cfg.trim_filters and (frag[0].startswith("only_") or frag[-1].startswith("only_")):
                 continue
             tok = entry_from_names(f"L{len(learned) + len(batch)}", frag, base_by_name)
             if tok.need or tok.delta or tok.rise > MAX_STACK:
