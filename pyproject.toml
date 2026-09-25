@@ -1,0 +1,13 @@
+[project]
+name = "sage"
+version = "0.0.1"
+description = "SAGE experiment 0: library economics on typed relational worlds"
+requires-python = ">=3.10"
+dependencies = []
+
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
