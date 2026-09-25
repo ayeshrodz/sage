@@ -54,3 +54,18 @@ Its hyperparameters (rounds, budgets, batch size, fragment lengths) may be tuned
 - Per-seed results.
 
 A failed criterion is reported as failed. The hidden split is not re-run after seeing its results.
+
+## Amendment 1 (2026-09-25, before the hidden `test` split was generated)
+
+**Observed on `train`/`val` only.** With a training stream made entirely of 2–3-entry compositions, learning stalls. Uniform search with a 10k budget solved 14 of 200 training tasks in round 1, all of them shallow. The mined fragments were generic (`out.parent in.parent`), and by round 3 the library held 3 entries with `val` at 9/40 solved. This is the bootstrapping problem known from DreamCoder: with no easy tasks, there are no stepping stones.
+
+**Change.**
+- The *training* streams (`train`, `control-train`) become a curriculum: each task has probability 0.5 of using a single entry (planted stream) or a single fresh macro (control stream), plus the usual optional connector and filter. Single-entry tasks must be at least 4 instructions long, and they pass through the same ≤3-instruction and degeneracy filters as every other task.
+- The wake budget is raised to 20,000 candidates, the same as the test budget.
+
+**Unchanged.**
+- `val`, `test` and `control-test` are generated exactly as registered: 2–3 entries, no curriculum.
+- The systems, the metrics, the P1/P2/P3-lite thresholds and the rule that `test` is run once.
+- The P2 reference set is still the planted entries at the top level of ≥5% of `train` targets, now counted on the curriculum stream.
+
+**Why this is fair.** The control stream gets the same curriculum, so any benefit from easier training tasks alone shows up in the control comparison. The curriculum is also part of what is being tested: the objective's progression (unfamiliar task → effortful solution → transferable procedure) assumes the system meets problems it can actually solve before harder ones.

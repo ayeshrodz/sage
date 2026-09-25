@@ -1,0 +1,94 @@
+{
+ "config": {
+  "rounds": 3,
+  "wake_budget": 10000,
+  "val_budget": 10000,
+  "batch": 4,
+  "min_support": 2,
+  "min_len": 2,
+  "max_len": 8,
+  "seed": 0
+ },
+ "library": [
+  [
+   "out.lives_in",
+   "clos.inside"
+  ],
+  [
+   "out.parent",
+   "in.parent"
+  ],
+  [
+   "push",
+   "out.parent",
+   "in.parent",
+   "inter_pop"
+  ]
+ ],
+ "uses": {
+  "out.lives_in clos.inside": 0,
+  "out.parent in.parent": 7,
+  "push out.parent in.parent inter_pop": 2
+ },
+ "pruned": [],
+ "history": [
+  {
+   "round": 1,
+   "train_solved": 14,
+   "new_solutions": 14,
+   "proposed": [
+    "out.lives_in clos.inside",
+    "out.parent in.parent"
+   ],
+   "accepted": [
+    "out.lives_in clos.inside",
+    "out.parent in.parent"
+   ],
+   "library_size": 2,
+   "val_solved": 7,
+   "val_candidates": 344312
+  },
+  {
+   "round": 2,
+   "train_solved": 22,
+   "new_solutions": 8,
+   "proposed": [
+    "push out.parent in.parent inter_pop",
+    "clos.parent clos.parent",
+    "out.parent in.parent only_size.small",
+    "out.parent out.parent"
+   ],
+   "accepted": [
+    "push out.parent in.parent inter_pop"
+   ],
+   "library_size": 3,
+   "val_solved": 9,
+   "val_candidates": 333179
+  },
+  {
+   "round": 3,
+   "train_solved": 25,
+   "new_solutions": 3,
+   "proposed": [
+    "out.parent out.parent",
+    "clos.parent clos.parent",
+    "out.parent in.parent only_size.small"
+   ],
+   "accepted": [],
+   "library_size": 3,
+   "val_solved": 9,
+   "val_candidates": 333179
+  }
+ ],
+ "train_solved": 25,
+ "val_solved": 9,
+ "cost": {
+  "wake_candidates": 5509495,
+  "wake_ops": 74711863,
+  "val_candidates": 4163868,
+  "val_ops": 61136809,
+  "cpu_s": 123.56288715300002
+ },
+ "stream": "planted",
+ "git": "4519bef+dirty"
+}

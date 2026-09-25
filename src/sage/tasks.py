@@ -22,7 +22,7 @@ import random
 from dataclasses import dataclass
 
 from .library import CONNECTOR_TYPE, CONNECTORS, FILTERS, Entry
-from .machine import Token, run
+from .machine import Token, run, token
 from .worlds import REGIMES, RELATIONS, World, generate_world
 
 GENERATOR_VERSION = "0a.1"
@@ -64,12 +64,13 @@ def examples_digest(examples) -> str:
     return hashlib.sha256(repr(rows).encode()).hexdigest()
 
 
-def sample_target(rng: random.Random, entries: list[Entry], min_length: int) -> tuple[str, ...] | None:
-    """2-3 planted entries in sequence, with optional connectors and a final filter."""
+def sample_target(rng: random.Random, entries: list[Entry], min_length: int,
+                  single: bool = False) -> tuple[str, ...] | None:
+    """2-3 planted entries in sequence (1 if `single`), with optional connectors and a final filter."""
     parts: list[str] = []
     length = 0
     cur_type = "person"
-    n_entries = rng.choice((2, 3))
+    n_entries = 1 if single else rng.choice((2, 3))
     for i in range(n_entries):
         eligible = [e for e in entries if e.in_type == cur_type]
         if not eligible:
@@ -87,6 +88,55 @@ def sample_target(rng: random.Random, entries: list[Entry], min_length: int) -> 
         parts.append(rng.choice(FILTERS))
         length += 1
     return tuple(parts) if length >= min_length else None
+
+
+# Type-respecting relation steps: instruction name -> type of its output.
+_STEPS = {
+    "person": {"out.parent": "person", "in.parent": "person", "out.friend": "person", "clos.parent": "person",
+               "rclos.parent": "person", "out.lives_in": "place", "out.owns": "item"},
+    "place": {"in.lives_in": "person", "out.near": "place", "out.inside": "place", "in.inside": "place",
+              "clos.inside": "place", "rclos.inside": "place"},
+    "item": {"in.owns": "person"},
+}
+
+
+def _random_macro(rng: random.Random, start: str):
+    """A fresh random macro that respects entity types: a 2-3 step relation path,
+    or push + a path returning to the start type + a set operation."""
+    for _ in range(100):
+        steps, t = [], start
+        for _ in range(rng.choice((2, 3))):
+            name = rng.choice(sorted(_STEPS[t]))
+            steps.append(name)
+            t = _STEPS[t][name]
+        if rng.random() < 0.5:
+            return steps, t
+        if t == start:
+            return ["push"] + steps + [rng.choice(("minus_pop", "inter_pop", "union_pop"))], t
+    return steps, t
+
+
+def sample_control_target(rng: random.Random, base: list[Token], min_length: int, single: bool = False):
+    """Same shape as a planted target, but built from 2-3 *fresh* random macros.
+
+    Macros are drawn per task (see `_random_macro`), so nothing recurs across
+    control tasks except by chance and a library learned from a control
+    stream has no task-family structure to exploit.
+    """
+    by_name = {b.name: b for b in base}
+    names, program, length, t = [], [], 0, "person"
+    for _ in range(1 if single else rng.choice((2, 3))):
+        steps, t = _random_macro(rng, t)
+        tok = token("[" + " ".join(steps) + "]", tuple(by_name[n].body[0] for n in steps))
+        names.append(tok.name)
+        program.append(tok)
+        length += tok.length
+    if rng.random() < 0.5:
+        f = rng.choice(FILTERS)
+        names.append(f)
+        program.append(by_name[f])
+        length += 1
+    return (tuple(names), program) if length >= min_length else None
 
 
 def _pick_examples(rng, program, regime, count, informative, max_worlds=40):
@@ -126,21 +176,35 @@ def ambiguous(target: tuple[str, ...], tokens: dict[str, Token], demos, queries:
 
 def generate_task(rng: random.Random, tokens: dict[str, Token], entries: list[Entry],
                   n_demos: int, n_queries: int, min_length: int = 6, short_len: int = 3,
-                  well_posed: bool = False, max_tries: int = 500, stats: dict | None = None):
+                  well_posed: bool = False, structure: str = "planted", single_share: float = 0.0,
+                  max_tries: int = 500, stats: dict | None = None):
     """One task whose demonstrations no program of <= `short_len` base instructions fits.
 
-    With `well_posed`, also reject tasks that are `ambiguous` (the generator
-    acting as a teacher who picks demonstrations that pin the target down).
+    `structure` is "planted" (targets built from the planted library) or
+    "control" (targets built from fresh random macros; see
+    `sample_control_target`). With `well_posed`, also reject tasks that are
+    `ambiguous` (the generator acting as a teacher who picks demonstrations
+    that pin the target down). `single_share` is the probability that a task
+    uses a single entry or macro (a curriculum of stepping stones); at 0 the
+    random stream is identical to earlier versions.
     """
     from .search import short_program_exists  # search imports Task from here
 
     stats = stats if stats is not None else {}
     base = [t for t in tokens.values() if t.is_base]
     for _ in range(max_tries):
-        target = sample_target(rng, entries, min_length)
-        if target is None:
-            continue
-        program = [tokens[name] for name in target]
+        single = single_share > 0 and rng.random() < single_share
+        min_len = 4 if single else min_length
+        if structure == "planted":
+            target = sample_target(rng, entries, min_len, single)
+            if target is None:
+                continue
+            program = [tokens[name] for name in target]
+        else:
+            drawn = sample_control_target(rng, base, min_len, single)
+            if drawn is None:
+                continue
+            target, program = drawn
         demos = _pick_examples(rng, program, "train", n_demos, informative=n_demos - 1)
         if demos is None or len({d.answer for d in demos}) < 2:
             stats["rejected_degenerate"] = stats.get("rejected_degenerate", 0) + 1
@@ -156,7 +220,7 @@ def generate_task(rng: random.Random, tokens: dict[str, Token], entries: list[En
                 break
             queries[stratum] = q
         else:
-            if well_posed and ambiguous(target, tokens, demos, queries):
+            if well_posed and structure == "planted" and ambiguous(target, tokens, demos, queries):
                 stats["rejected_ambiguous"] = stats.get("rejected_ambiguous", 0) + 1
                 continue
             task_id = hashlib.sha256((repr(target) + examples_digest(demos)).encode()).hexdigest()[:16]
@@ -166,12 +230,14 @@ def generate_task(rng: random.Random, tokens: dict[str, Token], entries: list[En
 
 
 def make_split(name: str, seed: int, n_tasks: int, tokens, entries, n_demos: int, n_queries: int = 5,
-               well_posed: bool = False, stats: dict | None = None):
+               well_posed: bool = False, structure: str = "planted", single_share: float = 0.0,
+               stats: dict | None = None):
     """A deterministic split; different names give disjoint random streams."""
     tasks, hidden = [], []
     for i in range(n_tasks):
         rng = random.Random(f"{GENERATOR_VERSION}:{name}:{seed}:{i}")
-        t, h = generate_task(rng, tokens, entries, n_demos, n_queries, well_posed=well_posed, stats=stats)
+        t, h = generate_task(rng, tokens, entries, n_demos, n_queries, well_posed=well_posed,
+                             structure=structure, single_share=single_share, stats=stats)
         tasks.append(t)
         hidden.append(h)
     return tasks, hidden
