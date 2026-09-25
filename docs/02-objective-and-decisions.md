@@ -44,6 +44,7 @@ The objective's key progression (unfamiliar task → effortful solution → tran
 | 2026-09-25 | Hardware and energy | **Postponed.** Work runs in a cloud container for now; the i5 comes back later. | Deterministic operation counts are the primary cost; CPU time is secondary; energy is deferred until we have local hardware with readable counters. |
 | 2026-09-25 | Scope | **Personal exploration**, with the long-run aim above. | Rigor stays high (controls, pre-registration), but external baselines such as Popper and DreamCoder are optional for now. |
 | 2026-09-25 | LLMs | **Allowed**, starting with a *small* model as a helper. | Enters after stage 0c as a costed proposal distribution: it suggests programs or library entries, the verifier decides, and its inference cost is counted in amortized cost. It never sees hidden queries. |
+| 2026-09-25 | Stage 0b pass marks | **P1 and P2 agreed** (see `04-stage-0b-preregistration.md`). | Registered before the hidden test split exists; the hidden split is run once. |
 
 ### Note on the small-model helper
 
