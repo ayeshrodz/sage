@@ -2,13 +2,14 @@
 
 A research project asking whether a reasoning system's capability can grow with what it has *stored* (verified programs and memories) while the compute it spends per task stays small. The long-run aim is compact, CPU-runnable AI with a small active core and a large, mostly inactive store of skills.
 
-**Status:** experiment 0, stages 0a–0c complete.
+**Status:** experiment 0, stages 0a–0d complete.
 
 - **0a:** a given library cuts work at least 90×.
 - **0b:** a library learned from scratch recovers real procedures but stalls without a guide.
 - **0c:** a refactoring learner with a state-conditioned guide solves 62% of unseen compositional tasks. That passes P1′, and the knowledge is family-specific (the control passes). But it fails the efficiency criteria: the guide costs more per decision than it saves, and learning takes about a thousand tasks to repay.
+- **0d:** a memory of verified programs makes recognized recurring tasks about 1,000× cheaper and more accurate than fresh search. It raises accuracy by 14 points and halves the work per correct answer across a recurring stream, at no cost when nothing recurs. But about 30% of recurrences go unrecognized (P1d failed; P2d–P4d passed).
 
-The proposed next step is stage 0d: reuse on recurring tasks.
+The proposed next step is recognition at scale.
 
 ## Documents
 
@@ -20,6 +21,8 @@ The proposed next step is stage 0d: reuse on recurring tasks.
 6. [`docs/05-stage-0b-results.md`](docs/05-stage-0b-results.md): stage 0b results (P1 fail, P2 pass), diagnosis and the stage 0c proposal.
 7. [`docs/06-stage-0c-preregistration.md`](docs/06-stage-0c-preregistration.md): stage 0c criteria and amendment, frozen before the hidden test.
 8. [`docs/07-stage-0c-results.md`](docs/07-stage-0c-results.md): stage 0c results (P1′ and the control pass; P3′ and P-guide fail) and the options for the next step.
+9. [`docs/08-stage-0d-preregistration.md`](docs/08-stage-0d-preregistration.md): stage 0d criteria and amendment, registered before the streams existed.
+10. [`docs/09-stage-0d-results.md`](docs/09-stage-0d-results.md): stage 0d results (P2d–P4d pass, P1d fails), why recurrences are missed, and the options for the next step.
 
 ## Layout
 
@@ -27,8 +30,9 @@ The proposed next step is stage 0d: reuse on recurring tasks.
 src/sage/      worlds.py (relational worlds), machine.py (instruction set + cost counting),
                library.py (planted library, distractors), tasks.py (tasks, splits, manifests),
                search.py (guided and policy-guided search), learn.py and learn_guided.py (wake-sleep learners),
-               features.py, guide.py, dreams.py (perception, learned guide, dreams), control.py, evaluation.py
-experiments/   stage0a.py, stage0b.py, stage0c.py (learn / final phases)
+               features.py, guide.py, dreams.py (perception, learned guide, dreams), control.py, evaluation.py,
+               stream.py and reuse.py (recurring-task streams, reuse memory)
+experiments/   stage0a.py, stage0b.py, stage0c.py, stage0d.py
 reports/       generated results (Markdown summaries, raw JSON, split manifests)
 tests/         unittest suites
 pilot/         the toy utility-curve pilot that motivated the design
@@ -39,7 +43,7 @@ pilot/         the toy utility-curve pilot that motivated the design
 Python 3.10 or newer. numpy is needed only for the stage 0c guide (`pip install numpy`).
 
 ```sh
-PYTHONPATH=src python -m unittest discover -s tests       # 33 tests, a few seconds
+PYTHONPATH=src python -m unittest discover -s tests       # 39 tests, a few seconds
 PYTHONPATH=src python experiments/stage0a.py              # about 2 minutes; writes reports/stage0a.*
 PYTHONPATH=src python experiments/stage0a.py --well-posed # the same with ambiguous tasks rejected
 PYTHONPATH=src python experiments/stage0b.py learn --stream planted --seed 0   # about 6 CPU minutes
