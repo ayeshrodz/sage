@@ -87,10 +87,18 @@ Every stage 1a run must be on **one machine**, because CPU time is the cost meas
 
 GitHub refuses files over 100 MB, so `tools/model_parts.py` splits the model into 45 MiB parts, with a SHA-256 checksum for every part and for the whole file. The parts go on their own branch, so the research branches never carry them. On the other side, `join` rebuilds the file only if every checksum matches.
 
-1. **Download** `qwen2.5-coder-1.5b-instruct-q4_k_m.gguf` in a browser.
+1. **Download** `qwen2.5-coder-1.5b-instruct-q4_k_m.gguf`.
    - It comes from the official Qwen repository: <https://huggingface.co/Qwen/Qwen2.5-Coder-1.5B-Instruct-GGUF/tree/main>.
    - The file's page there shows its SHA256.
    - The model is Apache-2.0 licensed, so keeping a copy in a private repository is fine.
+   - Either use a browser, or use the Hugging Face CLI from PyPI, run in the clone's root:
+
+     ```sh
+     python -m pip install -U huggingface_hub
+     hf download Qwen/Qwen2.5-Coder-1.5B-Instruct-GGUF qwen2.5-coder-1.5b-instruct-q4_k_m.gguf --local-dir models
+     ```
+
+     `models/` is git-ignored. Name the repository and the file exactly. `hf download Qwen/Qwen2.5-Coder-1.5B` would fetch the *base* model, which isn't instruction-tuned, as full-precision safetensors: about 3 GB that llama.cpp can't load directly.
 2. **Split** it, from a clone of this repository on the research branch:
 
    ```sh
