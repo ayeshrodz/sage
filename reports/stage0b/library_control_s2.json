@@ -1,0 +1,234 @@
+{
+ "config": {
+  "rounds": 8,
+  "wake_budget": 20000,
+  "val_budget": 10000,
+  "batch": 4,
+  "min_support": 2,
+  "min_len": 2,
+  "max_len": 8,
+  "trim_filters": true,
+  "seed": 2
+ },
+ "library": [
+  [
+   "out.owns",
+   "in.owns"
+  ],
+  [
+   "rclos.parent",
+   "out.friend"
+  ],
+  [
+   "rclos.parent",
+   "out.lives_in"
+  ],
+  [
+   "out.friend",
+   "out.lives_in"
+  ],
+  [
+   "out.friend",
+   "out.friend"
+  ],
+  [
+   "clos.parent",
+   "clos.parent"
+  ],
+  [
+   "out.friend",
+   "clos.parent"
+  ],
+  [
+   "out.friend",
+   "rclos.parent"
+  ],
+  [
+   "rclos.parent",
+   "out.friend",
+   "out.friend"
+  ],
+  [
+   "rclos.parent",
+   "rclos.parent"
+  ],
+  [
+   "out.lives_in",
+   "clos.inside"
+  ],
+  [
+   "out.lives_in",
+   "out.inside"
+  ],
+  [
+   "out.parent",
+   "rclos.parent"
+  ]
+ ],
+ "uses": {
+  "out.owns in.owns": 11,
+  "rclos.parent out.friend": 12,
+  "rclos.parent out.lives_in": 4,
+  "out.friend out.lives_in": 4,
+  "out.friend out.friend": 3,
+  "clos.parent clos.parent": 0,
+  "out.friend clos.parent": 1,
+  "out.friend rclos.parent": 8,
+  "rclos.parent out.friend out.friend": 2,
+  "rclos.parent rclos.parent": 3,
+  "out.lives_in clos.inside": 2,
+  "out.lives_in out.inside": 3,
+  "out.parent rclos.parent": 2
+ },
+ "pruned": [],
+ "history": [
+  {
+   "round": 1,
+   "train_solved": 68,
+   "new_solutions": 68,
+   "proposed": [
+    "rclos.parent out.friend",
+    "rclos.parent out.lives_in",
+    "out.friend out.lives_in",
+    "out.owns in.owns"
+   ],
+   "accepted": [],
+   "library_size": 0,
+   "val_solved": 8,
+   "val_candidates": 368511
+  },
+  {
+   "round": 2,
+   "train_solved": 70,
+   "new_solutions": 2,
+   "proposed": [
+    "out.owns in.owns",
+    "rclos.parent out.friend",
+    "rclos.parent out.lives_in",
+    "out.friend out.lives_in"
+   ],
+   "accepted": [
+    "out.owns in.owns",
+    "rclos.parent out.friend",
+    "rclos.parent out.lives_in",
+    "out.friend out.lives_in"
+   ],
+   "library_size": 4,
+   "val_solved": 9,
+   "val_candidates": 352982
+  },
+  {
+   "round": 3,
+   "train_solved": 90,
+   "new_solutions": 20,
+   "proposed": [
+    "out.friend out.friend",
+    "clos.parent clos.parent",
+    "out.friend clos.parent",
+    "out.friend rclos.parent"
+   ],
+   "accepted": [
+    "out.friend out.friend",
+    "clos.parent clos.parent",
+    "out.friend clos.parent",
+    "out.friend rclos.parent"
+   ],
+   "library_size": 8,
+   "val_solved": 9,
+   "val_candidates": 341554
+  },
+  {
+   "round": 4,
+   "train_solved": 96,
+   "new_solutions": 6,
+   "proposed": [
+    "rclos.parent out.friend out.friend",
+    "rclos.parent rclos.parent",
+    "out.lives_in clos.inside",
+    "out.lives_in out.inside"
+   ],
+   "accepted": [
+    "rclos.parent out.friend out.friend",
+    "rclos.parent rclos.parent",
+    "out.lives_in clos.inside",
+    "out.lives_in out.inside"
+   ],
+   "library_size": 12,
+   "val_solved": 13,
+   "val_candidates": 335614
+  },
+  {
+   "round": 5,
+   "train_solved": 100,
+   "new_solutions": 4,
+   "proposed": [
+    "out.parent rclos.parent",
+    "rclos.parent clos.parent",
+    "clos.parent clos.parent out.owns",
+    "clos.parent out.friend"
+   ],
+   "accepted": [
+    "out.parent rclos.parent"
+   ],
+   "library_size": 13,
+   "val_solved": 15,
+   "val_candidates": 329577
+  },
+  {
+   "round": 6,
+   "train_solved": 104,
+   "new_solutions": 4,
+   "proposed": [
+    "rclos.parent clos.parent",
+    "clos.parent clos.parent out.owns",
+    "clos.parent out.friend",
+    "clos.parent out.owns in.owns"
+   ],
+   "accepted": [],
+   "library_size": 13,
+   "val_solved": 15,
+   "val_candidates": 329577
+  },
+  {
+   "round": 7,
+   "train_solved": 108,
+   "new_solutions": 4,
+   "proposed": [
+    "out.friend rclos.parent out.friend",
+    "out.friend rclos.parent rclos.parent",
+    "rclos.parent out.friend rclos.parent",
+    "rclos.parent clos.parent"
+   ],
+   "accepted": [],
+   "library_size": 13,
+   "val_solved": 15,
+   "val_candidates": 329577
+  },
+  {
+   "round": 8,
+   "train_solved": 111,
+   "new_solutions": 3,
+   "proposed": [
+    "out.friend rclos.parent out.friend",
+    "out.friend rclos.parent rclos.parent",
+    "rclos.parent clos.parent",
+    "rclos.parent out.friend rclos.parent"
+   ],
+   "accepted": [],
+   "library_size": 13,
+   "val_solved": 15,
+   "val_candidates": 329577
+  }
+ ],
+ "train_solved": 111,
+ "val_solved": 15,
+ "cost": {
+  "wake_candidates": 18300054,
+  "wake_ops": 530434775,
+  "val_candidates": 10284269,
+  "val_ops": 390287513,
+  "cpu_s": 426.045567673
+ },
+ "stream": "control",
+ "git": "bb47197"
+}

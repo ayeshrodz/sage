@@ -1,0 +1,11 @@
+learning: stream=control seed=0 LearnConfig(rounds=8, wake_budget=20000, val_budget=10000, batch=4, min_support=2, min_len=2, max_len=8, trim_filters=True, seed=0)
+  round 0: val solved 4/40
+  round 1: train solved 68/200 (+68), library 4, val solved 6/40, accepted ['clos.parent clos.parent', 'clos.parent rclos.parent out.lives_in', 'out.friend out.lives_in', 'out.owns in.owns']
+  round 2: train solved 83/200 (+15), library 8, val solved 11/40, accepted ['rclos.parent out.lives_in', 'clos.parent rclos.parent', 'rclos.parent clos.parent', 'out.friend clos.parent']
+  round 3: train solved 92/200 (+9), library 12, val solved 13/40, accepted ['clos.parent out.owns in.owns', 'out.lives_in clos.inside', 'rclos.parent out.friend', 'clos.parent out.lives_in']
+  round 4: train solved 98/200 (+6), library 13, val solved 14/40, accepted ['rclos.parent rclos.parent']
+  round 5: train solved 104/200 (+6), library 14, val solved 14/40, accepted ['out.friend clos.parent rclos.parent']
+  round 6: train solved 108/200 (+4), library 15, val solved 15/40, accepted ['rclos.parent out.owns in.owns']
+  round 7: train solved 113/200 (+5), library 16, val solved 15/40, accepted ['rclos.parent clos.parent out.lives_in']
+  round 8: train solved 114/200 (+1), library 17, val solved 16/40, accepted ['clos.parent out.friend']
+  pruned 0; final library 17, val solved 16/40

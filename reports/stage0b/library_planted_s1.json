@@ -1,0 +1,291 @@
+{
+ "config": {
+  "rounds": 8,
+  "wake_budget": 20000,
+  "val_budget": 10000,
+  "batch": 4,
+  "min_support": 2,
+  "min_len": 2,
+  "max_len": 8,
+  "trim_filters": true,
+  "seed": 1
+ },
+ "library": [
+  [
+   "out.parent",
+   "in.parent",
+   "only_color.red",
+   "drop_x"
+  ],
+  [
+   "out.parent",
+   "in.parent"
+  ],
+  [
+   "out.parent",
+   "in.parent",
+   "only_size.small",
+   "drop_x"
+  ],
+  [
+   "out.parent",
+   "in.parent",
+   "drop_x"
+  ],
+  [
+   "out.lives_in",
+   "in.lives_in",
+   "drop_x"
+  ],
+  [
+   "in.parent",
+   "only_color.red",
+   "drop_x"
+  ],
+  [
+   "push",
+   "out.parent",
+   "in.parent",
+   "minus_pop"
+  ],
+  [
+   "clos.parent",
+   "push",
+   "out.parent",
+   "in.parent",
+   "minus_pop"
+  ],
+  [
+   "out.parent",
+   "push",
+   "out.parent",
+   "in.parent",
+   "minus_pop"
+  ],
+  [
+   "out.lives_in",
+   "in.lives_in"
+  ],
+  [
+   "push",
+   "out.parent",
+   "in.parent",
+   "minus_pop",
+   "in.parent"
+  ],
+  [
+   "clos.parent",
+   "push",
+   "out.parent",
+   "in.parent",
+   "minus_pop",
+   "in.parent"
+  ],
+  [
+   "out.lives_in",
+   "in.lives_in",
+   "drop_x",
+   "push",
+   "out.parent",
+   "in.parent",
+   "minus_pop"
+  ],
+  [
+   "in.parent",
+   "only_size.small",
+   "drop_x"
+  ],
+  [
+   "clos.parent",
+   "push",
+   "out.parent",
+   "in.parent",
+   "minus_pop",
+   "rclos.parent"
+  ],
+  [
+   "clos.parent",
+   "push",
+   "out.parent",
+   "in.parent",
+   "minus_pop",
+   "in.parent",
+   "clos.parent"
+  ]
+ ],
+ "uses": {
+  "out.parent in.parent only_color.red drop_x": 7,
+  "out.parent in.parent": 10,
+  "out.parent in.parent only_size.small drop_x": 5,
+  "out.parent in.parent drop_x": 0,
+  "out.lives_in in.lives_in drop_x": 9,
+  "in.parent only_color.red drop_x": 2,
+  "push out.parent in.parent minus_pop": 33,
+  "clos.parent push out.parent in.parent minus_pop": 3,
+  "out.parent push out.parent in.parent minus_pop": 3,
+  "out.lives_in in.lives_in": 3,
+  "push out.parent in.parent minus_pop in.parent": 4,
+  "clos.parent push out.parent in.parent minus_pop in.parent": 0,
+  "out.lives_in in.lives_in drop_x push out.parent in.parent minus_pop": 2,
+  "in.parent only_size.small drop_x": 0,
+  "clos.parent push out.parent in.parent minus_pop rclos.parent": 0,
+  "clos.parent push out.parent in.parent minus_pop in.parent clos.parent": 0
+ },
+ "pruned": [],
+ "history": [
+  {
+   "round": 1,
+   "train_solved": 81,
+   "new_solutions": 81,
+   "proposed": [
+    "out.parent in.parent drop_x",
+    "out.lives_in in.lives_in drop_x",
+    "out.parent in.parent only_size.small drop_x",
+    "out.parent in.parent only_color.red drop_x"
+   ],
+   "accepted": [
+    "out.parent in.parent only_color.red drop_x"
+   ],
+   "library_size": 1,
+   "val_solved": 7,
+   "val_candidates": 379916
+  },
+  {
+   "round": 2,
+   "train_solved": 86,
+   "new_solutions": 5,
+   "proposed": [
+    "out.parent in.parent",
+    "out.lives_in in.lives_in drop_x",
+    "in.parent only_color.red drop_x",
+    "in.parent only_size.small drop_x"
+   ],
+   "accepted": [
+    "out.parent in.parent"
+   ],
+   "library_size": 2,
+   "val_solved": 7,
+   "val_candidates": 364989
+  },
+  {
+   "round": 3,
+   "train_solved": 91,
+   "new_solutions": 5,
+   "proposed": [
+    "out.parent in.parent drop_x",
+    "out.lives_in in.lives_in drop_x",
+    "in.parent only_color.red drop_x",
+    "out.parent in.parent only_size.small drop_x"
+   ],
+   "accepted": [
+    "out.parent in.parent only_size.small drop_x"
+   ],
+   "library_size": 3,
+   "val_solved": 8,
+   "val_candidates": 350222
+  },
+  {
+   "round": 4,
+   "train_solved": 94,
+   "new_solutions": 3,
+   "proposed": [
+    "out.parent in.parent drop_x",
+    "out.lives_in in.lives_in drop_x",
+    "in.parent only_color.red drop_x",
+    "in.parent only_size.small drop_x"
+   ],
+   "accepted": [],
+   "library_size": 3,
+   "val_solved": 8,
+   "val_candidates": 350222
+  },
+  {
+   "round": 5,
+   "train_solved": 96,
+   "new_solutions": 2,
+   "proposed": [
+    "out.parent in.parent drop_x",
+    "out.lives_in in.lives_in drop_x",
+    "in.parent only_color.red drop_x",
+    "push out.parent in.parent minus_pop"
+   ],
+   "accepted": [
+    "out.parent in.parent drop_x",
+    "out.lives_in in.lives_in drop_x",
+    "in.parent only_color.red drop_x",
+    "push out.parent in.parent minus_pop"
+   ],
+   "library_size": 7,
+   "val_solved": 9,
+   "val_candidates": 327188
+  },
+  {
+   "round": 6,
+   "train_solved": 126,
+   "new_solutions": 30,
+   "proposed": [
+    "clos.parent push out.parent in.parent minus_pop",
+    "out.parent push out.parent in.parent minus_pop",
+    "out.lives_in in.lives_in",
+    "push out.parent in.parent minus_pop in.parent"
+   ],
+   "accepted": [
+    "clos.parent push out.parent in.parent minus_pop",
+    "out.parent push out.parent in.parent minus_pop",
+    "out.lives_in in.lives_in",
+    "push out.parent in.parent minus_pop in.parent"
+   ],
+   "library_size": 11,
+   "val_solved": 10,
+   "val_candidates": 315115
+  },
+  {
+   "round": 7,
+   "train_solved": 134,
+   "new_solutions": 8,
+   "proposed": [
+    "clos.parent push out.parent in.parent minus_pop in.parent",
+    "out.lives_in in.lives_in drop_x push out.parent in.parent minus_pop",
+    "in.parent only_size.small drop_x",
+    "clos.parent push out.parent in.parent minus_pop rclos.parent"
+   ],
+   "accepted": [
+    "clos.parent push out.parent in.parent minus_pop in.parent",
+    "out.lives_in in.lives_in drop_x push out.parent in.parent minus_pop",
+    "in.parent only_size.small drop_x",
+    "clos.parent push out.parent in.parent minus_pop rclos.parent"
+   ],
+   "library_size": 15,
+   "val_solved": 12,
+   "val_candidates": 303650
+  },
+  {
+   "round": 8,
+   "train_solved": 137,
+   "new_solutions": 3,
+   "proposed": [
+    "in.lives_in drop_x push out.parent in.parent minus_pop",
+    "out.friend out.friend",
+    "out.parent in.parent only_size.small drop_x in.parent",
+    "clos.parent push out.parent in.parent minus_pop in.parent clos.parent"
+   ],
+   "accepted": [
+    "clos.parent push out.parent in.parent minus_pop in.parent clos.parent"
+   ],
+   "library_size": 16,
+   "val_solved": 12,
+   "val_candidates": 297685
+  }
+ ],
+ "train_solved": 137,
+ "val_solved": 12,
+ "cost": {
+  "wake_candidates": 16152664,
+  "wake_ops": 311481209,
+  "val_candidates": 10575394,
+  "val_ops": 239205224,
+  "cpu_s": 379.40564908199997
+ },
+ "stream": "planted",
+ "git": "bb47197"
+}

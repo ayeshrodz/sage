@@ -1,0 +1,10 @@
+learning: stream=planted seed=2 LearnConfig(rounds=8, wake_budget=20000, val_budget=10000, batch=4, min_support=2, min_len=2, max_len=8, trim_filters=True, seed=2)
+  round 0: val solved 4/40
+  round 1: train solved 79/200 (+79), library 4, val solved 4/40, accepted ['out.parent in.parent drop_x', 'out.lives_in in.lives_in', 'in.parent only_size.large drop_x', 'in.lives_in only_color.red drop_x']
+  round 2: train solved 85/200 (+6), library 8, val solved 4/40, accepted ['out.parent in.parent', 'out.lives_in in.lives_in drop_x', 'out.lives_in in.lives_in only_color.red drop_x', 'in.parent only_color.red drop_x']
+  round 3: train solved 91/200 (+6), library 12, val solved 6/40, accepted ['out.parent push out.parent in.parent drop_x minus_pop', 'out.parent in.parent only_size.large drop_x', 'out.friend out.friend', 'out.parent in.parent only_color.blue drop_x']
+  round 4: train solved 124/200 (+33), library 16, val solved 11/40, accepted ['out.parent push out.parent in.parent drop_x minus_pop in.parent', 'out.parent push out.parent in.parent drop_x minus_pop rclos.parent', 'out.friend out.parent push out.parent in.parent drop_x minus_pop', 'in.parent only_color.blue drop_x']
+  round 5: train solved 126/200 (+2), library 16, val solved 11/40, accepted []
+  round 6: train solved 127/200 (+1), library 16, val solved 11/40, accepted []
+  round 7: train solved 127/200 (+0), library 16, val solved 11/40, accepted []
+  pruned 0; final library 16, val solved 11/40

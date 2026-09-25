@@ -1,0 +1,266 @@
+{
+ "config": {
+  "rounds": 8,
+  "wake_budget": 20000,
+  "val_budget": 10000,
+  "batch": 4,
+  "min_support": 2,
+  "min_len": 2,
+  "max_len": 8,
+  "trim_filters": true,
+  "seed": 0
+ },
+ "library": [
+  [
+   "clos.parent",
+   "clos.parent"
+  ],
+  [
+   "clos.parent",
+   "rclos.parent",
+   "out.lives_in"
+  ],
+  [
+   "out.friend",
+   "out.lives_in"
+  ],
+  [
+   "out.owns",
+   "in.owns"
+  ],
+  [
+   "rclos.parent",
+   "out.lives_in"
+  ],
+  [
+   "clos.parent",
+   "rclos.parent"
+  ],
+  [
+   "rclos.parent",
+   "clos.parent"
+  ],
+  [
+   "out.friend",
+   "clos.parent"
+  ],
+  [
+   "clos.parent",
+   "out.owns",
+   "in.owns"
+  ],
+  [
+   "out.lives_in",
+   "clos.inside"
+  ],
+  [
+   "rclos.parent",
+   "out.friend"
+  ],
+  [
+   "clos.parent",
+   "out.lives_in"
+  ],
+  [
+   "rclos.parent",
+   "rclos.parent"
+  ],
+  [
+   "out.friend",
+   "clos.parent",
+   "rclos.parent"
+  ],
+  [
+   "rclos.parent",
+   "out.owns",
+   "in.owns"
+  ],
+  [
+   "rclos.parent",
+   "clos.parent",
+   "out.lives_in"
+  ],
+  [
+   "clos.parent",
+   "out.friend"
+  ]
+ ],
+ "uses": {
+  "clos.parent clos.parent": 7,
+  "clos.parent rclos.parent out.lives_in": 2,
+  "out.friend out.lives_in": 3,
+  "out.owns in.owns": 15,
+  "rclos.parent out.lives_in": 3,
+  "clos.parent rclos.parent": 8,
+  "rclos.parent clos.parent": 6,
+  "out.friend clos.parent": 4,
+  "clos.parent out.owns in.owns": 0,
+  "out.lives_in clos.inside": 2,
+  "rclos.parent out.friend": 4,
+  "clos.parent out.lives_in": 4,
+  "rclos.parent rclos.parent": 5,
+  "out.friend clos.parent rclos.parent": 1,
+  "rclos.parent out.owns in.owns": 1,
+  "rclos.parent clos.parent out.lives_in": 0,
+  "clos.parent out.friend": 0
+ },
+ "pruned": [],
+ "history": [
+  {
+   "round": 1,
+   "train_solved": 68,
+   "new_solutions": 68,
+   "proposed": [
+    "clos.parent clos.parent",
+    "clos.parent rclos.parent out.lives_in",
+    "out.friend out.lives_in",
+    "out.owns in.owns"
+   ],
+   "accepted": [
+    "clos.parent clos.parent",
+    "clos.parent rclos.parent out.lives_in",
+    "out.friend out.lives_in",
+    "out.owns in.owns"
+   ],
+   "library_size": 4,
+   "val_solved": 6,
+   "val_candidates": 366930
+  },
+  {
+   "round": 2,
+   "train_solved": 83,
+   "new_solutions": 15,
+   "proposed": [
+    "rclos.parent out.lives_in",
+    "clos.parent rclos.parent",
+    "rclos.parent clos.parent",
+    "out.friend clos.parent"
+   ],
+   "accepted": [
+    "rclos.parent out.lives_in",
+    "clos.parent rclos.parent",
+    "rclos.parent clos.parent",
+    "out.friend clos.parent"
+   ],
+   "library_size": 8,
+   "val_solved": 11,
+   "val_candidates": 323984
+  },
+  {
+   "round": 3,
+   "train_solved": 92,
+   "new_solutions": 9,
+   "proposed": [
+    "clos.parent out.owns in.owns",
+    "out.lives_in clos.inside",
+    "rclos.parent out.friend",
+    "clos.parent out.lives_in"
+   ],
+   "accepted": [
+    "clos.parent out.owns in.owns",
+    "out.lives_in clos.inside",
+    "rclos.parent out.friend",
+    "clos.parent out.lives_in"
+   ],
+   "library_size": 12,
+   "val_solved": 13,
+   "val_candidates": 313904
+  },
+  {
+   "round": 4,
+   "train_solved": 98,
+   "new_solutions": 6,
+   "proposed": [
+    "rclos.parent rclos.parent",
+    "clos.parent out.owns",
+    "out.lives_in in.lives_in",
+    "clos.parent in.parent"
+   ],
+   "accepted": [
+    "rclos.parent rclos.parent"
+   ],
+   "library_size": 13,
+   "val_solved": 14,
+   "val_candidates": 317443
+  },
+  {
+   "round": 5,
+   "train_solved": 104,
+   "new_solutions": 6,
+   "proposed": [
+    "clos.parent rclos.parent rclos.parent",
+    "out.friend clos.parent rclos.parent",
+    "rclos.parent out.owns in.owns",
+    "clos.parent out.owns"
+   ],
+   "accepted": [
+    "out.friend clos.parent rclos.parent"
+   ],
+   "library_size": 14,
+   "val_solved": 14,
+   "val_candidates": 305809
+  },
+  {
+   "round": 6,
+   "train_solved": 108,
+   "new_solutions": 4,
+   "proposed": [
+    "rclos.parent clos.parent out.lives_in",
+    "clos.parent rclos.parent rclos.parent",
+    "out.lives_in in.lives_in",
+    "rclos.parent out.owns in.owns"
+   ],
+   "accepted": [
+    "rclos.parent out.owns in.owns"
+   ],
+   "library_size": 15,
+   "val_solved": 15,
+   "val_candidates": 312000
+  },
+  {
+   "round": 7,
+   "train_solved": 113,
+   "new_solutions": 5,
+   "proposed": [
+    "clos.parent rclos.parent rclos.parent",
+    "rclos.parent clos.parent out.lives_in",
+    "out.lives_in in.lives_in",
+    "clos.parent out.friend"
+   ],
+   "accepted": [
+    "rclos.parent clos.parent out.lives_in"
+   ],
+   "library_size": 16,
+   "val_solved": 15,
+   "val_candidates": 307416
+  },
+  {
+   "round": 8,
+   "train_solved": 114,
+   "new_solutions": 1,
+   "proposed": [
+    "clos.parent rclos.parent rclos.parent",
+    "out.friend clos.parent clos.parent",
+    "out.lives_in in.lives_in",
+    "clos.parent out.friend"
+   ],
+   "accepted": [
+    "clos.parent out.friend"
+   ],
+   "library_size": 17,
+   "val_solved": 16,
+   "val_candidates": 316609
+  }
+ ],
+ "train_solved": 114,
+ "val_solved": 16,
+ "cost": {
+  "wake_candidates": 17605913,
+  "wake_ops": 500469172,
+  "val_candidates": 9763731,
+  "val_ops": 361320806,
+  "cpu_s": 391.921059125
+ },
+ "stream": "control",
+ "git": "bb47197"
+}

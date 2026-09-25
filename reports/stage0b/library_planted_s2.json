@@ -1,0 +1,267 @@
+{
+ "config": {
+  "rounds": 8,
+  "wake_budget": 20000,
+  "val_budget": 10000,
+  "batch": 4,
+  "min_support": 2,
+  "min_len": 2,
+  "max_len": 8,
+  "trim_filters": true,
+  "seed": 2
+ },
+ "library": [
+  [
+   "out.parent",
+   "in.parent",
+   "drop_x"
+  ],
+  [
+   "out.lives_in",
+   "in.lives_in"
+  ],
+  [
+   "in.parent",
+   "only_size.large",
+   "drop_x"
+  ],
+  [
+   "in.lives_in",
+   "only_color.red",
+   "drop_x"
+  ],
+  [
+   "out.parent",
+   "in.parent"
+  ],
+  [
+   "out.lives_in",
+   "in.lives_in",
+   "drop_x"
+  ],
+  [
+   "out.lives_in",
+   "in.lives_in",
+   "only_color.red",
+   "drop_x"
+  ],
+  [
+   "in.parent",
+   "only_color.red",
+   "drop_x"
+  ],
+  [
+   "out.parent",
+   "push",
+   "out.parent",
+   "in.parent",
+   "drop_x",
+   "minus_pop"
+  ],
+  [
+   "out.parent",
+   "in.parent",
+   "only_size.large",
+   "drop_x"
+  ],
+  [
+   "out.friend",
+   "out.friend"
+  ],
+  [
+   "out.parent",
+   "in.parent",
+   "only_color.blue",
+   "drop_x"
+  ],
+  [
+   "out.parent",
+   "push",
+   "out.parent",
+   "in.parent",
+   "drop_x",
+   "minus_pop",
+   "in.parent"
+  ],
+  [
+   "out.parent",
+   "push",
+   "out.parent",
+   "in.parent",
+   "drop_x",
+   "minus_pop",
+   "rclos.parent"
+  ],
+  [
+   "out.friend",
+   "out.parent",
+   "push",
+   "out.parent",
+   "in.parent",
+   "drop_x",
+   "minus_pop"
+  ],
+  [
+   "in.parent",
+   "only_color.blue",
+   "drop_x"
+  ]
+ ],
+ "uses": {
+  "out.parent in.parent drop_x": 8,
+  "out.lives_in in.lives_in": 4,
+  "in.parent only_size.large drop_x": 0,
+  "in.lives_in only_color.red drop_x": 0,
+  "out.parent in.parent": 2,
+  "out.lives_in in.lives_in drop_x": 5,
+  "out.lives_in in.lives_in only_color.red drop_x": 0,
+  "in.parent only_color.red drop_x": 4,
+  "out.parent push out.parent in.parent drop_x minus_pop": 36,
+  "out.parent in.parent only_size.large drop_x": 0,
+  "out.friend out.friend": 2,
+  "out.parent in.parent only_color.blue drop_x": 1,
+  "out.parent push out.parent in.parent drop_x minus_pop in.parent": 1,
+  "out.parent push out.parent in.parent drop_x minus_pop rclos.parent": 0,
+  "out.friend out.parent push out.parent in.parent drop_x minus_pop": 1,
+  "in.parent only_color.blue drop_x": 0
+ },
+ "pruned": [],
+ "history": [
+  {
+   "round": 1,
+   "train_solved": 79,
+   "new_solutions": 79,
+   "proposed": [
+    "out.parent in.parent drop_x",
+    "out.lives_in in.lives_in",
+    "in.parent only_size.large drop_x",
+    "in.lives_in only_color.red drop_x"
+   ],
+   "accepted": [
+    "out.parent in.parent drop_x",
+    "out.lives_in in.lives_in",
+    "in.parent only_size.large drop_x",
+    "in.lives_in only_color.red drop_x"
+   ],
+   "library_size": 4,
+   "val_solved": 4,
+   "val_candidates": 373246
+  },
+  {
+   "round": 2,
+   "train_solved": 85,
+   "new_solutions": 6,
+   "proposed": [
+    "out.parent in.parent",
+    "out.lives_in in.lives_in drop_x",
+    "out.lives_in in.lives_in only_color.red drop_x",
+    "in.parent only_color.red drop_x"
+   ],
+   "accepted": [
+    "out.parent in.parent",
+    "out.lives_in in.lives_in drop_x",
+    "out.lives_in in.lives_in only_color.red drop_x",
+    "in.parent only_color.red drop_x"
+   ],
+   "library_size": 8,
+   "val_solved": 4,
+   "val_candidates": 372470
+  },
+  {
+   "round": 3,
+   "train_solved": 91,
+   "new_solutions": 6,
+   "proposed": [
+    "out.parent push out.parent in.parent drop_x minus_pop",
+    "out.parent in.parent only_size.large drop_x",
+    "out.friend out.friend",
+    "out.parent in.parent only_color.blue drop_x"
+   ],
+   "accepted": [
+    "out.parent push out.parent in.parent drop_x minus_pop",
+    "out.parent in.parent only_size.large drop_x",
+    "out.friend out.friend",
+    "out.parent in.parent only_color.blue drop_x"
+   ],
+   "library_size": 12,
+   "val_solved": 6,
+   "val_candidates": 357959
+  },
+  {
+   "round": 4,
+   "train_solved": 124,
+   "new_solutions": 33,
+   "proposed": [
+    "out.parent push out.parent in.parent drop_x minus_pop in.parent",
+    "out.parent push out.parent in.parent drop_x minus_pop rclos.parent",
+    "out.friend out.parent push out.parent in.parent drop_x minus_pop",
+    "in.parent only_color.blue drop_x"
+   ],
+   "accepted": [
+    "out.parent push out.parent in.parent drop_x minus_pop in.parent",
+    "out.parent push out.parent in.parent drop_x minus_pop rclos.parent",
+    "out.friend out.parent push out.parent in.parent drop_x minus_pop",
+    "in.parent only_color.blue drop_x"
+   ],
+   "library_size": 16,
+   "val_solved": 11,
+   "val_candidates": 330843
+  },
+  {
+   "round": 5,
+   "train_solved": 126,
+   "new_solutions": 2,
+   "proposed": [
+    "push out.parent in.parent drop_x minus_pop in.parent",
+    "push out.parent in.parent drop_x minus_pop rclos.parent",
+    "out.lives_in in.lives_in drop_x out.parent",
+    "out.parent in.parent only_color.red drop_x"
+   ],
+   "accepted": [],
+   "library_size": 16,
+   "val_solved": 11,
+   "val_candidates": 330843
+  },
+  {
+   "round": 6,
+   "train_solved": 127,
+   "new_solutions": 1,
+   "proposed": [
+    "push out.parent in.parent drop_x minus_pop in.parent",
+    "push out.parent in.parent drop_x minus_pop rclos.parent",
+    "out.lives_in in.lives_in drop_x out.parent",
+    "out.parent in.parent only_color.red drop_x"
+   ],
+   "accepted": [],
+   "library_size": 16,
+   "val_solved": 11,
+   "val_candidates": 330843
+  },
+  {
+   "round": 7,
+   "train_solved": 127,
+   "new_solutions": 0,
+   "proposed": [
+    "push out.parent in.parent drop_x minus_pop in.parent",
+    "push out.parent in.parent drop_x minus_pop rclos.parent",
+    "out.lives_in in.lives_in drop_x out.parent",
+    "out.parent in.parent only_color.red drop_x"
+   ],
+   "accepted": [],
+   "library_size": 16,
+   "val_solved": 11,
+   "val_candidates": 330843
+  }
+ ],
+ "train_solved": 127,
+ "val_solved": 11,
+ "cost": {
+  "wake_candidates": 13670657,
+  "wake_ops": 377928084,
+  "val_candidates": 7340923,
+  "val_ops": 276114690,
+  "cpu_s": 330.219607245
+ },
+ "stream": "planted",
+ "git": "bb47197"
+}
