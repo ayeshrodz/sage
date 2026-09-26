@@ -311,7 +311,7 @@ def evaluate(stream: str) -> dict:
            "headers": headers, "replayed_on": here,
            "one_machine": all(same_cpu(h["machine"], here) for h in headers.values()),
            "systems": {k: summarize(v, n_params) for k, v in systems.items()}, "compare": {}}
-    for mem, b in (("S", "B"), ("E+M", "E"), ("S+", "B")):
+    for mem, b in (("S", "B"), ("E+M", "E"), ("S+", "B"), ("S", "D"), ("S+", "D")):  # vs D: amendment 1
         if mem in systems:
             out["compare"][f"{mem} vs {b}"] = compare(systems[b], systems[mem])
     if "B" in base:
