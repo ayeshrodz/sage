@@ -2,13 +2,13 @@
 
 A research project asking whether a reasoning system's capability can grow with what it has *stored* (verified programs and memories) while the compute it spends per task stays small. The long-run aim is compact, CPU-runnable AI with a small active core and a large, mostly inactive store of skills.
 
-**Status:** experiment 0 (stages 0a–0d) is complete. Stage 1a, a real workload with a small language model, is built, tested and pre-registered; its model run is pending.
+**Status:** stages 0a–0d and 1a are complete. Stage 1a, a real workload with a small language model, passed all four of its pre-registered criteria.
 
 - **0a:** a given library cuts work at least 90×.
 - **0b:** a library learned from scratch recovers real procedures but stalls without a guide.
 - **0c:** a refactoring learner with a state-conditioned guide solves 62% of unseen compositional tasks. That passes P1′, and the knowledge is family-specific (the control passes). But it fails the efficiency criteria: the guide costs more per decision than it saves, and learning takes about a thousand tasks to repay.
 - **0d:** a memory of verified programs makes recognized recurring tasks about 1,000× cheaper and more accurate than fresh search. It raises accuracy by 14 points and halves the work per correct answer across a recurring stream, at no cost when nothing recurs. But about 30% of recurrences go unrecognized (P1d failed; P2d–P4d passed).
-- **1a (set up):** the same question on a realistic workload. Data-wrangling requests by example ("Mary Chen" → "M.C.") are answered by Qwen2.5-Coder-1.5B on the CPU, with and without a memory of verified functions, and against a classical synthesizer. Everything runs and is tested. The model run is waiting for the weights. This environment blocks `huggingface.co`, so the author is bringing the model in through the repository, split into checksummed parts on a separate branch (see `docs/11-stage-1a-setup.md`).
+- **1a:** a real workload with a real model. Data-wrangling requests by example ("Mary Chen" → "M.C.") are answered by Qwen2.5-Coder-1.5B on a 4-core CPU. On a 300-request recurring stream, a memory of verified functions answers 74% of requests in microseconds. It is 2.9× cheaper per correct answer than having the model write functions each time, and more accurate. W1–W4 all pass. It also beats asking the model directly: 92–93% correct against 71%, at 1.4–2.2× less CPU per correct answer. But that depends on requests recurring, and on the model being able to write a function for the frequent types. The weak point is writing the procedure, not reusing it (`docs/12-stage-1a-results.md`).
 
 ## Documents
 
@@ -24,6 +24,7 @@ A research project asking whether a reasoning system's capability can grow with 
 10. [`docs/09-stage-0d-results.md`](docs/09-stage-0d-results.md): stage 0d results (P2d–P4d pass, P1d fails), why recurrences are missed, and the options for the next step.
 11. [`docs/10-stage-1a-preregistration.md`](docs/10-stage-1a-preregistration.md): stage 1a criteria (W1–W4), registered before any stage 1a code or stream existed.
 12. [`docs/11-stage-1a-setup.md`](docs/11-stage-1a-setup.md): what stage 1a consists of, what was checked without the model, and how to run the model stage.
+13. [`docs/12-stage-1a-results.md`](docs/12-stage-1a-results.md): stage 1a results (W1–W4 pass), the comparison with asking the model directly, when memory pays, and the options for the next step.
 
 ## Layout
 

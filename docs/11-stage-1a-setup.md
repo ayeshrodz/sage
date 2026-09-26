@@ -4,16 +4,9 @@
 
 ## Status
 
-Everything for stage 1a is built and tested except the model run itself:
-- the workload,
-- the systems,
-- the memory,
-- the classical baseline,
-- the harness and reports.
+**Done** (2026-09-26). The model was downloaded after the author allowed Hugging Face for the download. Its SHA-256 matched the one Hugging Face lists. The settings were then tuned on the development streams and frozen by amendment 1. The registered streams were generated and run once. The results are in [`12-stage-1a-results.md`](12-stage-1a-results.md).
 
-The model can't be downloaded here, because this cloud environment's network policy denies `huggingface.co`. The run can go ahead either here, once that host is allowed, or on the author's own computer. Both are described below.
-
-Nothing has been run on the registered streams, and their manifests have not been generated. The prompts and model settings are still open for tuning on the development streams.
+The rest of this document describes the setup as it was before the model run, and how to repeat it.
 
 ## What is built
 
