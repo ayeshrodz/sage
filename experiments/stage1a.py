@@ -57,7 +57,7 @@ STREAMS = {
     "norecur": ("1a-norecur", lambda: norecur_stream("1a-norecur")),
 }
 REGISTERED = ("zipf", "norecur")
-CONFIG = ModelConfig()  # tuned on the development streams, then frozen by amendment
+CONFIG = ModelConfig(attempts=7, temperature=1.0)  # tuned on the development streams; frozen by amendment 1
 DEFAULT_MODEL = {"llama": str(ROOT / "models" / "qwen2.5-coder-1.5b-instruct-q4_k_m.gguf"),
                  "ollama": "qwen2.5-coder:1.5b", "fake": "classical synthesizer"}
 W1_MIN, W2_MIN, W3_MIN, W4_MAX = 0.50, 2.0, -0.02, 1.05

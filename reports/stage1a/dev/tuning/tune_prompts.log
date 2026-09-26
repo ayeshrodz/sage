@@ -1,0 +1,6 @@
+p2               accepted 20/50 (at 1/2/3: [13, 5, 2]), accepted but wrong 0, correct 37/50, outputs 218/250, calls 149, CPU 1938s (490s)
+p2+shot          accepted 17/50 (at 1/2/3: [14, 0, 3]), accepted but wrong 2, correct 36/50, outputs 213/250, calls 155, CPU 2037s (515s)
+p2+repair        accepted 15/50 (at 1/2/3: [13, 1, 1]), accepted but wrong 0, correct 36/50, outputs 216/250, calls 158, CPU 2407s (609s)
+p2+shot+repair   accepted 16/50 (at 1/2/3: [14, 2, 0]), accepted but wrong 1, correct 36/50, outputs 213/250, calls 154, CPU 2413s (611s)
+
+[exited with code 0]

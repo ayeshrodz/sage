@@ -1,0 +1,5 @@
+2026-09-26T00:53:23Z
+Rule for choosing B's attempts and temperature, written before the attempts curve was seen:
+- temperature: whichever of 0.7 and 1.0 accepts more functions with 8 attempts on 1a-dev-types (0.7 on a tie);
+- attempts: the smallest k in 1..8 that accepts at least 90% of the functions accepted with 8 attempts at that temperature.
+Prompts stay 1a-p1 (no variant beat it); token limits stay 384 and 256.
