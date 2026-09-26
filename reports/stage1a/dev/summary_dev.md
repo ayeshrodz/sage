@@ -12,8 +12,10 @@
 | S+ | 78.0% | 87.8% | 128 | 19,229 + 5,111 | 1,285.6 | 16.48 s | 51 | 98.0% |
 
 - S vs B: hits 40.0%, CPU per correct request B ÷ S 1.3×, accuracy +5.0 pts, total CPU ratio 0.805, model calls avoided 60
-- E+M vs E: hits 51.0%, CPU per correct request E ÷ E+M 2.0×, accuracy +0.0 pts, total CPU ratio 0.511, model calls avoided 0
+- E+M vs E: hits 51.0%, CPU per correct request E ÷ E+M 2.0×, accuracy +0.0 pts, total CPU ratio 0.512, model calls avoided 0
 - S+ vs B: hits 51.0%, CPU per correct request B ÷ S+ 2.0×, accuracy +10.0 pts, total CPU ratio 0.561, model calls avoided 129
+- S vs D: hits 40.0%, CPU per correct request D ÷ S 0.6×, accuracy -5.0 pts, total CPU ratio 1.501, model calls avoided -97
+- S+ vs D: hits 51.0%, CPU per correct request D ÷ S+ 1.0×, accuracy +0.0 pts, total CPU ratio 1.045, model calls avoided -28
 - B's model calls: {'accepted_at_attempt': {1: 44, 2: 5, 3: 1}, 'direct_fallbacks': 50, 'program_calls': 207, 'no_function': 0, 'function_not_fitting': 157, 'mean_program_tokens': 31.32850241545894, 'mean_direct_tokens': 36.38, 'mean_call_seconds': 2.2577006202879395}
 - B: git f708c82, model qwen2.5-coder-1.5b-instruct-q4_k_m.gguf, prompts 1a-p1, config {'attempts': 3, 'temperature': 0.7, 'program_tokens': 384, 'direct_tokens': 256}, machine Intel(R) Xeon(R) Processor @ 2.10GHz × 4
 - D: git f708c82, model qwen2.5-coder-1.5b-instruct-q4_k_m.gguf, prompts 1a-p1, config {'attempts': 3, 'temperature': 0.7, 'program_tokens': 384, 'direct_tokens': 256}, machine Intel(R) Xeon(R) Processor @ 2.10GHz × 4
