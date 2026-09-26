@@ -50,10 +50,11 @@ def _record(req, mode, code, outputs, calls, t0, w0, external=0.0, **extra) -> d
 
 
 def _call(model, messages, temperature, max_tokens, seed, stop, kind) -> tuple[dict, str]:
+    c0 = time.process_time()
     r = model.chat(messages, temperature, max_tokens, seed, stop)
     return {"kind": kind, "temperature": temperature, "seed": seed, "prompt_tokens": r.prompt_tokens,
             "completion_tokens": r.completion_tokens, "seconds": r.seconds, "external_cpu": r.external_cpu,
-            "text": r.text}, r.text
+            "cpu": time.process_time() - c0 + r.external_cpu, "text": r.text}, r.text
 
 
 def run_D(model, req, cfg: ModelConfig, tag: str) -> dict:

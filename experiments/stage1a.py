@@ -262,6 +262,35 @@ def model_diagnostics(rows: list[dict]) -> dict:
             "mean_call_seconds": share(c["seconds"] for c in program + direct)}
 
 
+def fewer_attempts(b_rows: list[dict], d_rows: list[dict], k: int) -> list[dict]:
+    """B with at most k program attempts, replayed from B's own records (amendment 1).
+
+    B stops at its first fitting function and its seeds depend only on the request and the attempt, so with fewer
+    attempts it makes the same first calls. Where it would then fall back to a direct answer that B itself never gave,
+    the answer and its cost are D's on the same request: the same prompt with greedy decoding.
+    """
+    d_by = {r["index"]: r for r in d_rows}
+    out = []
+    for r in b_rows:
+        program = [c for c in r["model_calls"] if c["kind"] == "program"]
+        first_fit = next((i + 1 for i, c in enumerate(program) if c["fits"]), None)
+        if first_fit is not None and first_fit <= k:
+            out.append(r)
+            continue
+        cpu_of = lambda c: c.get("cpu", c["seconds"] * r["cpu"] / max(r["wall"], 1e-9))  # noqa: E731 (dev records)
+        own = [c for c in r["model_calls"] if c["kind"] == "direct"]
+        fb = r if own else d_by[r["index"]]
+        fb_calls = own or fb["model_calls"]
+        calls = program[:k] + fb_calls
+        out.append({"index": r["index"], "type": r["type"], "mode": "direct", "code": None, "outputs": fb["outputs"],
+                    "n_correct": fb["n_correct"], "correct": fb["correct"], "calls": len(calls),
+                    "prompt_tokens": sum(c["prompt_tokens"] for c in calls),
+                    "completion_tokens": sum(c["completion_tokens"] for c in calls),
+                    "cpu": sum(cpu_of(c) for c in program[:k]) + (sum(cpu_of(c) for c in own) if own else fb["cpu"]),
+                    "model_calls": calls})
+    return out
+
+
 def compare(base: list[dict], mem: list[dict]) -> dict:
     """A memory system against the memoryless system it falls back to, on the same requests."""
     b_cpu, m_cpu = sum(r["cpu"] for r in base), sum(r["cpu"] for r in mem)
@@ -316,6 +345,19 @@ def evaluate(stream: str) -> dict:
             out["compare"][f"{mem} vs {b}"] = compare(systems[b], systems[mem])
     if "B" in base:
         out["diagnostics"] = model_diagnostics(base["B"])
+    if "B" in base and "D" in base:  # secondary analysis declared in amendment 1: fewer program attempts
+        out["attempts_curve"] = []
+        d_cpu, d_cor = sum(r["cpu"] for r in base["D"]), sum(r["correct"] for r in base["D"])
+        for k in range(1, headers["B"]["config"]["attempts"] + 1):
+            bk = fewer_attempts(base["B"], base["D"], k)
+            row = {"attempts": k, "B": summarize(bk, None)}
+            row["S"] = summarize(replay(requests, [("B", bk)]), None)
+            if "E" in base:
+                row["S+"] = summarize(replay(requests, [("E", base["E"]), ("B", bk)]), None)
+            for name in ("S", "S+"):
+                if name in row:
+                    row[f"D / {name}"] = (d_cpu / d_cor) / row[name]["cpu_per_correct"] if d_cor else None
+            out["attempts_curve"].append(row)
     out["rows"] = systems
     return out
 
@@ -349,6 +391,23 @@ def system_table(ev: dict) -> list[str]:
     return lines
 
 
+def attempts_table(ev: dict) -> list[str]:
+    if not ev.get("attempts_curve"):
+        return []
+    lines = ["", "Fewer program attempts (amendment 1), replayed from B's records: correct requests, CPU per correct"
+             " request, and for S and S+ the share answered from memory. D ÷ S > 1 means S is cheaper per correct"
+             " request than D.", "",
+             "| Attempts | B | S | S from memory | D ÷ S | S+ | S+ from memory | D ÷ S+ |",
+             "|---:|---:|---:|---:|---:|---:|---:|---:|"]
+    for row in ev["attempts_curve"]:
+        b, sm, sp = row["B"], row["S"], row.get("S+")
+        lines.append(f"| {row['attempts']} | {pct(b['correct'])}, {sec(b['cpu_per_correct'])} |"
+                     f" {pct(sm['correct'])}, {sec(sm['cpu_per_correct'])} | {pct(sm['hit_rate'])} | {mult(row['D / S'])} |"
+                     + (f" {pct(sp['correct'])}, {sec(sp['cpu_per_correct'])} | {pct(sp['hit_rate'])} |"
+                        f" {mult(row['D / S+'])} |" if sp else " — | — | — |"))
+    return lines
+
+
 def dev_report(ev: dict) -> str:
     lines = [f"# Stage 1a development summary: `{ev['stream']}`", "",
              f"{ev['requests']} requests of {ev['types']} types. Development stream: not a registered result.", ""]
@@ -362,6 +421,7 @@ def dev_report(ev: dict) -> str:
                      f" model calls avoided {c['calls_avoided']}")
     if "diagnostics" in ev:
         lines.append(f"- B's model calls: {ev['diagnostics']}")
+    lines += attempts_table(ev)
     for k, h in ev["headers"].items():
         lines.append(f"- {k}: git {h.get('git')}, model {h.get('model')}, prompts {h.get('prompt_version')},"
                      f" config {h.get('config')}, machine {h['machine']['cpu']} × {h['machine']['logical_cores']}")
@@ -441,6 +501,7 @@ def write_final(out: dict) -> None:
               f" {', '.join(str(d['accepted_at_attempt'].get(k, 0)) for k in (1, 2, 3))}; direct fallbacks"
               f" {d['direct_fallbacks']}; of {d['program_calls']} program calls, {d['no_function']} gave no function"
               f" and {d['function_not_fitting']} a function that did not fit the examples."]
+    lines += attempts_table(zs)
     s = zs["systems"]["S"]
     lines += ["", "## Memory on `1a-zipf` (S)", "",
               f"- Stored functions at the end: {s['final_memory']}; median CPU time of a hit {sec(s['median_hit_cpu'])};"
